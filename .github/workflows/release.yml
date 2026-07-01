@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    tags: ["v*.*.*"]
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    needs: []
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      - name: Merge checksums
+        run: find artifacts/ -name "*.sha256" -o -name "checksum*.txt" | xargs cat > SHA256SUMS.txt
+      - name: Generate changelog
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          echo "## Changes since ${PREV_TAG}" > CHANGELOG.md
+          git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" >> CHANGELOG.md || true
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
+          draft: false
+          files: |
+            artifacts/**/*
+            SHA256SUMS.txt
+      - name: Notify Telegram
+        if: secrets.TELEGRAM_BOT_TOKEN != \'\'
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHANNEL_ID }}" \
+            -d text="UnifiedShield ${{ github.ref_name }} released! Check GitHub for downloads."

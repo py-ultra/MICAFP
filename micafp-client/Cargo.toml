@@ -1,0 +1,10 @@
+[package]
+name    = "micafp-client"
+version = "10.0.0"
+edition = "2021"
+
+[dependencies]
+micafp-core = { path = "../micafp-core" }
+tokio       = { version = "1", features = ["full"] }
+serde       = { version = "1", features = ["derive"] }
+tracing     = "0.1"

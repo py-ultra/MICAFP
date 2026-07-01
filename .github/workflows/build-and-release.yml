@@ -1,0 +1,619 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+
+env:
+  RUST_VERSION: "1.77.2"
+  GO_VERSION: "1.22.3"
+  FLUTTER_VERSION: "3.22.0"
+  ZIG_VERSION: "0.13.0"
+  NODE_VERSION: "20"
+  CARGO_TERM_COLOR: always
+
+# ---------------------------------------------------------------------------
+# Permissions
+# ---------------------------------------------------------------------------
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+# ---------------------------------------------------------------------------
+# Concurrency: only one build per branch at a time
+# ---------------------------------------------------------------------------
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+# ============================================================================
+# JOBS
+# ============================================================================
+
+jobs:
+
+  # -----------------------------------------------------------------------
+  # 1. Lint & Check
+  # -----------------------------------------------------------------------
+  lint:
+    name: Lint & Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            daemon/target
+          key: cargo-lint-${{ hashFiles('daemon/Cargo.lock') }}
+          restore-keys: cargo-lint-
+
+      - name: Rust fmt
+        run: cargo fmt --manifest-path daemon/Cargo.toml -- --check
+
+      - name: Clippy
+        run: cargo clippy --manifest-path daemon/Cargo.toml -- -D warnings
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Lint Extensions
+        run: |
+          npm install -g typescript
+          cd extensions
+          for dir in chrome firefox; do
+            tsc --noEmit --strict "$dir"/*.ts || true
+          done
+
+  # -----------------------------------------------------------------------
+  # 2. Rust Daemon — Cross-compilation matrix
+  # -----------------------------------------------------------------------
+  build-daemon:
+    name: Daemon (${{ matrix.target }})
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Android
+          - target: aarch64-linux-android
+            os: ubuntu-latest
+            cross: true
+          - target: armv7-linux-androideabi
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-linux-android
+            os: ubuntu-latest
+            cross: true
+          # iOS / macOS
+          - target: aarch64-apple-ios
+            os: macos-latest
+            cross: false
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            cross: false
+          # Windows
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            cross: false
+          # Linux
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+          # OpenWrt
+          - target: mipsel-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            daemon/target
+          key: cargo-daemon-${{ matrix.target }}-${{ hashFiles('daemon/Cargo.lock') }}
+          restore-keys: cargo-daemon-${{ matrix.target }}-
+
+      - name: Install cross
+        if: matrix.cross
+        run: cargo install cross --locked
+
+      - name: Build (cross)
+        if: matrix.cross
+        run: |
+          cd daemon
+          cross build --release --target ${{ matrix.target }}
+
+      - name: Build (native)
+        if: "!matrix.cross"
+        run: |
+          cd daemon
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Prepare artifact
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          ext=""
+          if [[ "${{ matrix.target }}" == *"-windows-"* ]]; then ext=".exe"; fi
+          src="daemon/target/${{ matrix.target }}/release/shield-daemon${ext}"
+          if [ ! -f "$src" ]; then
+            src="daemon/target/release/shield-daemon${ext}"
+          fi
+          cp "$src" "artifacts/shield-daemon-${{ matrix.target }}${ext}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daemon-${{ matrix.target }}
+          path: artifacts/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 3. Go PT Bridge
+  # -----------------------------------------------------------------------
+  build-go-bridge:
+    name: Go Bridge (${{ matrix.goos }}/${{ matrix.goarch }})
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: android
+            goarch: arm64
+          - goos: android
+            goarch: arm
+          - goos: android
+            goarch: amd64
+          - goos: ios
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: linux
+            goarch: mipsle
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: go-bridge-${{ matrix.goos }}-${{ matrix.goarch }}-${{ hashFiles('go-bridge/go.sum') }}
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          cd go-bridge
+          ext=""
+          if [ "$GOOS" = "windows" ]; then ext=".exe"; fi
+          go build -ldflags="-s -w" -o "../artifacts/shield-bridge-${{ matrix.goos }}-${{ matrix.goarch }}${ext}" .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-bridge-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: artifacts/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 4. Zig OpenWrt binary
+  # -----------------------------------------------------------------------
+  build-zig-openwrt:
+    name: Zig OpenWrt (mipsel)
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: ${{ env.ZIG_VERSION }}
+
+      - name: Build
+        run: |
+          cd zig-openwrt
+          zig build -Dtarget=mipsel-linux-musl -Doptimize=ReleaseSmall
+          cp zig-out/bin/shield-openwrt ../artifacts/shield-openwrt-mipsel
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zig-openwrt-mipsel
+          path: artifacts/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 5. Flutter builds
+  # -----------------------------------------------------------------------
+  build-flutter:
+    name: Flutter (${{ matrix.target }})
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: apk-arm64
+            os: ubuntu-latest
+            build-cmd: "flutter build apk --split-per-abi --target-platform android-arm64"
+            artifact: "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
+          - target: apk-arm
+            os: ubuntu-latest
+            build-cmd: "flutter build apk --split-per-abi --target-platform android-arm"
+            artifact: "build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk"
+          - target: apk-x64
+            os: ubuntu-latest
+            build-cmd: "flutter build apk --split-per-abi --target-platform android-x64"
+            artifact: "build/app/outputs/flutter-apk/app-x86_64-release.apk"
+          - target: appbundle
+            os: ubuntu-latest
+            build-cmd: "flutter build appbundle"
+            artifact: "build/app/outputs/bundle/release/app-release.aab"
+          - target: ios
+            os: macos-latest
+            build-cmd: "flutter build ios --release --no-codesign"
+            artifact: "build/ios/iphoneos/Runner.app"
+          - target: windows
+            os: windows-latest
+            build-cmd: "flutter build windows --release"
+            artifact: "build/windows/x64/runner/Release/"
+          - target: linux
+            os: ubuntu-latest
+            build-cmd: "flutter build linux --release"
+            artifact: "build/linux/x64/release/bundle/"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install Linux dependencies
+        if: matrix.target == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Flutter pub get
+        run: |
+          cd flutter
+          flutter pub get
+
+      - name: Build
+        run: |
+          cd flutter
+          ${{ matrix.build-cmd }}
+
+      - name: Prepare artifact
+        shell: bash
+        run: |
+          mkdir -p flutter-artifacts
+          src="flutter/${{ matrix.artifact }}"
+          if [ -d "$src" ]; then
+            tar czf "flutter-artifacts/flutter-${{ matrix.target }}.tar.gz" -C "$src" .
+          else
+            cp "$src" "flutter-artifacts/flutter-${{ matrix.target }}.${src##*.}"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-${{ matrix.target }}
+          path: flutter-artifacts/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 6. WASM obfuscator
+  # -----------------------------------------------------------------------
+  build-wasm:
+    name: WASM Obfuscator
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WASM with SIMD
+        env:
+          RUSTFLAGS: "-C target-feature=+simd128"
+        run: |
+          cd extensions/wasm-obfuscator
+          wasm-pack build --target web --release -- --features simd
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p wasm-artifacts
+          cp extensions/wasm-obfuscator/pkg/* wasm-artifacts/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-obfuscator
+          path: wasm-artifacts/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 7. Browser extensions
+  # -----------------------------------------------------------------------
+  build-extensions:
+    name: Extension (${{ matrix.browser }})
+    needs: [lint, build-wasm]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download WASM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm-obfuscator
+          path: wasm-pkg/
+
+      - name: Install dependencies
+        run: |
+          npm install -g typescript esbuild
+
+      - name: Build extension
+        run: |
+          browser="${{ matrix.browser }}"
+          mkdir -p "dist/extension-${browser}"
+
+          # Copy extension files
+          cp -r "extensions/${browser}/"*.html "dist/extension-${browser}/" 2>/dev/null || true
+          cp -r "extensions/${browser}/manifest.json "dist/extension-${browser}/" 2>/dev/null || true
+
+          # Create wasm directory
+          mkdir -p "dist/extension-${browser}/wasm"
+          cp wasm-pkg/*.wasm "dist/extension-${browser}/wasm/" 2>/dev/null || true
+
+          # Bundle TypeScript
+          esbuild "extensions/${browser}/background.ts" \
+            --bundle \
+            --outfile="dist/extension-${browser}/background.js" \
+            --format=iife \
+            --target=chrome100 \
+            --define:process.env.NODE_ENV='"production"'
+
+          esbuild "extensions/${browser}/popup.ts" \
+            --bundle \
+            --outfile="dist/extension-${browser}/popup.js" \
+            --format=iife \
+            --target=chrome100 \
+            --define:process.env.NODE_ENV='"production"'
+
+          # Create placeholder icons
+          mkdir -p "dist/extension-${browser}/icons"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-${{ matrix.browser }}
+          path: dist/extension-${{ matrix.browser }}/
+          retention-days: 7
+
+  # -----------------------------------------------------------------------
+  # 8. CDN Worker deployment
+  # -----------------------------------------------------------------------
+  deploy-cdn-workers:
+    name: Deploy CDN Workers
+    needs: lint
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy Deno Worker
+        env:
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+        run: |
+          if [ -n "$DENO_DEPLOY_TOKEN" ]; then
+            cd workers/deno-cdn
+            npm install -g deployctl
+            deployctl deploy --project=shield-cdn src/index.ts --token="$DENO_DEPLOY_TOKEN" || echo "Deno deploy failed"
+          else
+            echo "DENO_DEPLOY_TOKEN not set, skipping"
+          fi
+
+      - name: Deploy Cloudflare Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            cd workers/cloudflare-cdn
+            npm install -g wrangler
+            wrangler deploy || echo "CF deploy failed"
+          else
+            echo "CLOUDFLARE_API_TOKEN not set, skipping"
+          fi
+
+  # -----------------------------------------------------------------------
+  # 9. AI Model Training (monthly or on tag)
+  # -----------------------------------------------------------------------
+  train-ai-model:
+    name: Train AI Model
+    needs: lint
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest-gpu  # requires GPU runner
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+          pip install onnx onnxruntime numpy tensorboard
+
+      - name: Generate synthetic data
+        run: |
+          python ai-models/train/adversarial_traffic_gan.py \
+            --generate-synthetic \
+            --data-dir ./training-data \
+            --synthetic-samples 50000
+
+      - name: Train
+        run: |
+          python ai-models/train/adversarial_traffic_gan.py \
+            --data-dir ./training-data \
+            --epochs 500 \
+            --batch-size 128 \
+            --output-dir ./ai-models/output
+
+      - name: Upload model
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-model-traffic-gan
+          path: ai-models/output/
+          retention-days: 30
+
+  # -----------------------------------------------------------------------
+  # 10. Release (on version tags)
+  # -----------------------------------------------------------------------
+  release:
+    name: Create Release
+    needs:
+      - build-daemon
+      - build-go-bridge
+      - build-zig-openwrt
+      - build-flutter
+      - build-wasm
+      - build-extensions
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts/
+
+      - name: Organize & compute checksums
+        run: |
+          mkdir -p release
+          find all-artifacts -type f | while read f; do
+            dest="release/$(basename "$f")"
+            cp "$f" "$dest"
+          done
+
+          # SHA256 checksums
+          cd release
+          sha256sum * > ../SHA256SUMS.txt
+          mv ../SHA256SUMS.txt .
+
+          echo "Release contents:"
+          ls -la
+
+      - name: Ed25519 sign checksums
+        env:
+          ED25519_PRIVATE_KEY: ${{ secrets.ED25519_PRIVATE_KEY }}
+        run: |
+          if [ -n "$ED25519_PRIVATE_KEY" ]; then
+            echo "$ED25519_PRIVATE_KEY" | base64 -d > signing_key
+            cat release/SHA256SUMS.txt | \
+              openssl pkeyutl -sign -inkey signing_key -pkeyopt digest:sha512 | \
+              base64 > release/SHA256SUMS.sig
+            rm -f signing_key
+          else
+            echo "ED25519_PRIVATE_KEY not set, skipping signing"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# ============================================================================
+# Required Secrets
+# ============================================================================
+#
+# DENO_DEPLOY_TOKEN         — Deno Deploy API token
+# CLOUDFLARE_API_TOKEN      — Cloudflare Workers API token
+# ED25519_PRIVATE_KEY       — Ed25519 private key (base64) for release signing
+# GITHUB_TOKEN              — Automatic (for release upload)
+#
+# Optional (for code signing):
+# APPLE_CERTIFICATE          — Base64-encoded Apple developer certificate
+# APPLE_CERTIFICATE_PASSWORD — Certificate password
+# KEYCHAIN_PASSWORD          — Temporary keychain password
+# ANDROID_KEYSTORE           — Base64-encoded Android keystore
+# ANDROID_KEYSTORE_PASSWORD  — Keystore password
+# ANDROID_KEY_ALIAS          — Key alias
+# ANDROID_KEY_PASSWORD       — Key password

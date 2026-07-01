@@ -1,0 +1,36 @@
+name: Build iOS
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Xcode 16
+        uses: maxim-lobanov/setup-xcode@v1
+        with: {xcode-version: "16"}
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+      - name: Build Rust daemon
+        run: |
+          cd daemon
+          cargo build --release --target aarch64-apple-ios
+          cargo build --release --target aarch64-apple-ios-sim
+      - name: Build iOS app
+        run: |
+          cd ios/UnifiedShield
+          xcodebuild -scheme UnifiedShield -configuration Release -destination \'generic/platform=iOS\' CODE_SIGNING_ALLOWED=NO -archivePath build/UnifiedShield.xcarchive archive
+          xcodebuild -exportArchive -archivePath build/UnifiedShield.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/ipa CODE_SIGNING_ALLOWED=NO
+      - name: Generate checksums
+        run: find . -name "*.ipa" -exec shasum -a 256 {} \\; > checksums.txt
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-artifacts
+          path: |
+            **/*.ipa
+            checksums.txt

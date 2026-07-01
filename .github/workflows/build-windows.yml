@@ -1,0 +1,42 @@
+name: Build Windows
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc,aarch64-pc-windows-msvc
+      - name: Build Rust daemon
+        run: |
+          cd daemon
+          cargo build --release --target x86_64-pc-windows-msvc
+      - name: Download Wintun
+        run: |
+          Invoke-WebRequest -Uri "https://www.wintun.net/builds/wintun-0.14.1.zip" -OutFile wintun.zip
+          Expand-Archive wintun.zip -DestinationPath wintun
+          Copy-Item wintun/wintun/bin/amd64/wintun.dll windows/src/
+      - name: Build tray app
+        run: |
+          cd windows
+          cmake -B build -G "Visual Studio 17 2022" -A x64
+          cmake --build build --config Release
+      - name: Generate checksums
+        run: |
+          Get-ChildItem -Recurse -Include *.exe,*.dll | ForEach-Object {
+            $hash = (Get-FileHash -Algorithm SHA256 $_.FullName).Hash
+            "$hash  $($_.Name)" | Out-File "$($_.FullName).sha256"
+          }
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: |
+            daemon/target/x86_64-pc-windows-msvc/release/*.exe
+            windows/build/Release/*.exe
+            **/*.sha256

@@ -1,0 +1,21 @@
+[package]
+name    = "micafp-admin"
+version = "10.0.0"
+edition = "2021"
+
+[[bin]]
+name = "micafp-admin"
+path = "src/main.rs"
+
+[dependencies]
+micafp-core     = { path = "../micafp-core" }
+tokio           = { version = "1", features = ["full"] }
+ratatui         = "0.26"
+crossterm       = "0.27"
+clap            = { version = "4", features = ["derive"] }
+serde_json      = "1"
+tracing         = "0.1"
+tracing-subscriber = "0.3"
+thiserror       = "1"
+rand            = "0.8"
+hex             = "0.4"

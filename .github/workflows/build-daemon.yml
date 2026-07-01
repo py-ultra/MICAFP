@@ -1,0 +1,45 @@
+name: Build Daemon
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  lint-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: {components: "rustfmt,clippy"}
+      - run: cd daemon && cargo fmt -- --check
+      - run: cd daemon && cargo clippy -- -D warnings
+      - run: cd daemon && cargo test
+  build:
+    needs: lint-test
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-22.04
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-22.04
+          - target: x86_64-apple-darwin
+            os: macos-14
+          - target: aarch64-apple-darwin
+            os: macos-14
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: cd daemon && cargo build --release --target ${{ matrix.target }}
+      - run: cd daemon && strip target/${{ matrix.target }}/release/unifiedshield-daemon || true
+      - run: sha256sum daemon/target/${{ matrix.target }}/release/unifiedshield-daemon* > checksum.txt || certutil -hashfile daemon/target/${{ matrix.target }}/release/unifiedshield-daemon.exe SHA256 > checksum.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daemon-${{ matrix.target }}
+          path: |
+            daemon/target/${{ matrix.target }}/release/unifiedshield-daemon*
+            checksum.txt

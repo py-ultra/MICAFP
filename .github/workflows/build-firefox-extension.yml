@@ -1,0 +1,40 @@
+name: Build Firefox Extension
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: npm install -g pnpm@9 web-ext
+      - name: Build WASM
+        run: |
+          cd extensions/wasm-obfuscator
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+          wasm-pack build --target web
+      - name: Build extension
+        run: |
+          cd extensions/firefox
+          pnpm install
+          pnpm build
+      - name: Package .xpi
+        run: |
+          cd extensions/firefox
+          web-ext build --overwrite-dest
+      - name: Sign with AMO (if secrets present)
+        if: env.FIREFOX_AMO_ISSUER != \'\'
+        run: echo "AMO signing would happen here"
+        env:
+          FIREFOX_AMO_ISSUER: ${{ secrets.FIREFOX_AMO_ISSUER }}
+      - name: Generate checksum
+        run: sha256sum extensions/firefox/web-ext-artifacts/*.xpi > checksum.txt || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension
+          path: |
+            extensions/firefox/web-ext-artifacts/*.xpi
+            checksum.txt

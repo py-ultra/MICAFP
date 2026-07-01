@@ -1,0 +1,36 @@
+name: Build Chrome Extension
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: npm install -g pnpm@9
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Build WASM obfuscator
+        run: |
+          cd extensions/wasm-obfuscator
+          wasm-pack build --target web
+      - name: Build extension
+        run: |
+          cd extensions/chrome
+          pnpm install
+          pnpm build
+      - name: Package
+        run: |
+          cd extensions/chrome
+          zip -r ../../unifiedshield-chrome-extension.zip dist/
+      - name: Generate checksum
+        run: sha256sum unifiedshield-chrome-extension.zip > checksum.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: |
+            unifiedshield-chrome-extension.zip
+            checksum.txt

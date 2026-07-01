@@ -1,0 +1,4028 @@
+{
+  "metadata": {
+    "description": "Integrated ISP profiles for Iranian internet service providers with advanced DPI behavior, SNI strategies, fragmentation configs, and intelligent anti-censorship bypass techniques",
+    "last_updated": "2025-05-30",
+    "version": "8.0.0",
+    "total_profiles": 13,
+    "schema_version": "2.0",
+    "changelog": "v7: fixed duplicate entries, added ITC profile, added shadow_tls_config, reality_configs, utls_fingerprints, doh_servers, dot_servers, cdn_fronting, anti_active_probing, circumvention_tools, reliability_score, last_verified; filled missing fields for asiatech/mobinnet/fanava/irib/pishgaman/afranet; corrected total_profiles count; added advanced_bypass_techniques and quantum_safe section",
+    "asn_sharing_notes": {
+      "5618": "Shared by MCI and Mokhaberat/TCI — TCI provides backbone transit for MCI's core network",
+      "42337": "Shared by ParsOnline and Pishgaman — Pishgaman uses ParsOnline upstream infrastructure",
+      "56402": "Shared by Asiatech and ITC — ITC (DCI) owns Asiatech's infrastructure layer",
+      "12880": "Shared by Mokhaberat and ITC — ITC is a subsidiary of TCI/Mokhaberat"
+    },
+    "changelog_v8": "v8: fixed ASN sharing documentation, completed isp_detection dns_suffixes and ip_ranges for all 13 ISPs, added next_gen_technologies survey, NAIN bypass completeness checklist, Iran DPI intelligence database, enhanced advanced_bypass_techniques"
+  },
+  "profiles": [
+    {
+      "id": "mci",
+      "name_en": "MCI (Mobile Communication Company of Iran / Hamrah-e-Aval)",
+      "name_fa": "همراه اول",
+      "asns": [
+        41689,
+        197207,
+        43754,
+        5618
+      ],
+      "ip_ranges": [
+        "5.106.0.0/16",
+        "5.107.0.0/16",
+        "5.108.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.106.0.1",
+        "secondary": "5.106.0.2",
+        "ipv6_primary": "2a02:8680::1",
+        "ipv6_secondary": "2a02:8680::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "217.218.127.127",
+          "5.200.200.200",
+          "5.200.200.201",
+          "91.92.154.22",
+          "91.92.155.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://electrodns.com/dns-query",
+          "provider": "electro",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://dns.begzar.ir/dns-query",
+          "provider": "begzar",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "ntp1.mci.ir",
+        "ntp2.mci.ir",
+        "5.200.200.200"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-plain",
+        "VMess_plain",
+        "VLESS_plain"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-azure",
+        "VLESS_Reality",
+        "AmneziaWG",
+        "MVLESS",
+        "shadow-tls-v3",
+        "vless-reality-vision",
+        "vless-reality-grpc"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best performance on MCI, low DPI visibility"
+        },
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 2,
+          "notes": "uTLS vision fingerprint evades TLS inspection"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 3,
+          "notes": "High throughput on mobile"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 4,
+          "notes": "WireGuard obfuscated for MCI"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 5,
+          "notes": "Stable fallback via CDN"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 6,
+          "notes": "ShadowTLS v3 bypasses TLS fingerprinting"
+        },
+        {
+          "protocol": "tuic-v5",
+          "priority": 7,
+          "notes": "QUIC-based, check if QUIC is blocked first"
+        },
+        {
+          "protocol": "meek-azure",
+          "priority": 8,
+          "notes": "Slow but very reliable domain fronting"
+        }
+      ],
+      "preferred_cores": [
+        "mahsang",
+        "amneziavpn",
+        "hiddify",
+        "xray-gfw",
+        "psiphon",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 85,
+      "throttle_factor": 1.3,
+      "bandwidth_mbps": {
+        "4g_download": 45,
+        "4g_upload": 20,
+        "3g_download": 8,
+        "3g_upload": 3
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 128,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 500
+      },
+      "sni_domains": [
+        "api.my.mci.ir",
+        "shop.mci.ir",
+        "selfcare.mci.ir",
+        "mci.ir",
+        "app.mci.ir",
+        "pay.mci.ir",
+        "charge.mci.ir",
+        "my.mci.ir",
+        "billing.mci.ir",
+        "support.mci.ir",
+        "cdn.arvancloud.ir",
+        "api.arvancloud.ir",
+        "static.arvancloud.ir",
+        "portal.mci.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud",
+          "alibaba_cloud",
+          "tencent_cloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "target_header": "your-domain.arvancloud.ir",
+          "works": true
+        },
+        "alibaba_cloud": {
+          "fronting_domain": "alicdn.com",
+          "target_header": "your-domain.alibabacloud.com",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false,
+          "reason": "blocked at MCI level"
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Split TLS ClientHello at SNI extension boundary to prevent DPI fingerprinting of destination domain",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 1,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com",
+          "www.microsoft.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "short_id_length": 8,
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "fallback_snis": [
+          "www.microsoft.com",
+          "update.googleapis.com"
+        ],
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari",
+        "ios",
+        "android",
+        "randomized"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "replay_filter",
+          "time_based_challenge"
+        ],
+        "recommended": "server_side_auth",
+        "notes": "MCI uses active probing on detected endpoints; rotate server IPs monthly"
+      },
+      "circumvention_tools": {
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        },
+        "lantern": {
+          "works": true,
+          "speed": "medium"
+        },
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "v2rayng": {
+          "works": true,
+          "speed": "high"
+        },
+        "streisand": {
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        8080,
+        8443,
+        8888,
+        9050,
+        9051
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "3.2",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 50,
+        "probing_interval_minutes": 30,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering",
+          "certificate_validation",
+          "entropy_analysis"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 7,
+          "entropy_threshold": 4.2,
+          "flow_timeout_seconds": 30
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess",
+          "trojan_grpc"
+        ],
+        "bypass_difficulty": "medium",
+        "update_frequency": "weekly"
+      },
+      "reliability_score": 72,
+      "last_verified": "2025-05-01",
+      "notes_fa": "بزرگترین اپراتور موبایل ایران. فیلترینگ SNI و DNS فعال است. از FAVA v3 استفاده می‌کند. Reality و AmneziaWG بهترین گزینه‌ها هستند.",
+      "notes_en": "Largest mobile operator in Iran. SNI filtering and DNS poisoning are active. Uses FAVA v3. Reality and AmneziaWG are top choices."
+    },
+    {
+      "id": "irancell",
+      "name_en": "Irancell (MTN Irancell)",
+      "name_fa": "ایرانسل",
+      "asns": [
+        39074,
+        43235,
+        44400,
+        49581
+      ],
+      "ip_ranges": [
+        "5.112.0.0/14",
+        "5.116.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.112.0.1",
+        "secondary": "5.112.0.2",
+        "ipv6_primary": "2a02:8580::1",
+        "ipv6_secondary": "2a02:8580::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "91.92.154.22",
+          "91.92.155.22",
+          "5.200.200.200",
+          "178.22.122.100"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://electrodns.com/dns-query",
+          "provider": "electro",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "ntp.irancell.ir",
+        "5.200.200.200",
+        "178.22.122.100"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-amazon",
+        "VLESS_Reality",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best evasion against FAVA v4 ML classification"
+        },
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 2,
+          "notes": "uTLS vision most effective against ML DPI"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 3,
+          "notes": "Hides behind real TLS handshake"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 4,
+          "notes": "Fast QUIC-based, but check quic_blocking"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 5,
+          "notes": "HTTP/2 masquerade, very hard to classify"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 6,
+          "notes": "Reliable via Chinese CDN fronting"
+        },
+        {
+          "protocol": "meek-amazon",
+          "priority": 7,
+          "notes": "Domain fronting via AWS"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "defyxvpn",
+        "xray-gfw",
+        "psiphon",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 75,
+      "throttle_factor": 1.2,
+      "bandwidth_mbps": {
+        "4g_download": 60,
+        "4g_upload": 25,
+        "3g_download": 10,
+        "3g_upload": 4
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 64,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 300
+      },
+      "sni_domains": [
+        "my.irancell.ir",
+        "shop.irancell.ir",
+        "api.irancell.ir",
+        "selfcare.irancell.ir",
+        "irancell.ir",
+        "app.irancell.ir",
+        "pay.irancell.ir",
+        "charge.irancell.ir",
+        "data.irancell.ir",
+        "support.irancell.ir",
+        "cdn.arvancloud.ir",
+        "api.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "alibaba_cloud",
+          "tencent_cloud",
+          "baidu_cloud"
+        ],
+        "alibaba_cloud": {
+          "fronting_domain": "alicdn.com",
+          "works": true
+        },
+        "tencent_cloud": {
+          "fronting_domain": "cdn-go.cn",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false,
+          "reason": "blocked by Irancell DPI"
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        }
+      },
+      "fragment_strategy": {
+        "type": "RecordSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Split TLS records at random positions within the record to prevent flow reconstruction. More aggressive than SniSplit to counter ML-based DPI.",
+        "split_position": 5,
+        "min_fragment_size": 1,
+        "max_fragment_size": 3,
+        "inter_fragment_delay_ms": 2,
+        "retry_on_failure": true,
+        "fallback_strategy": "RandomSplit",
+        "record_padding": true,
+        "pad_to_nearest": 8,
+        "ttl_range": [
+          32,
+          48
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "dl.google.com:443",
+        "server_names": [
+          "dl.google.com",
+          "www.speedtest.net",
+          "addons.mozilla.org"
+        ],
+        "utls_fingerprint": "randomized",
+        "short_id_length": 8,
+        "flow": "xtls-rprx-vision",
+        "note": "Rotate server_names regularly due to FAVA v4 ML learning"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.google.com",
+        "fallback_snis": [
+          "update.googleapis.com",
+          "www.microsoft.com"
+        ],
+        "handshake_timeout_ms": 6000
+      },
+      "utls_fingerprints": [
+        "randomized",
+        "firefox",
+        "chrome",
+        "safari"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "traffic_padding",
+          "ip_rotation"
+        ],
+        "recommended": "server_side_auth",
+        "notes": "Irancell FAVA v4 does aggressive active probing every 20 min; rotate IPs weekly"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        },
+        "v2rayng": {
+          "works": true,
+          "speed": "high"
+        },
+        "defyx": {
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1433,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        6379,
+        8080,
+        8443,
+        8888,
+        9050,
+        9051,
+        27017
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "4.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": true,
+        "esni_filtering": true,
+        "reset_attack": true,
+        "reset_threshold_packets": 30,
+        "probing_interval_minutes": 20,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering",
+          "certificate_validation",
+          "entropy_analysis",
+          "ml_traffic_classification",
+          "statistical_flow_analysis",
+          "quic_inspection",
+          "dns_query_interception",
+          "esni_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 5,
+          "entropy_threshold": 3.8,
+          "flow_timeout_seconds": 60
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "openvpn_udp",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "shadowsocks_aead",
+          "v2ray_vmess",
+          "v2ray_vless",
+          "trojan_grpc",
+          "trojan_ws",
+          "hysteria2",
+          "naiveproxy"
+        ],
+        "bypass_difficulty": "high",
+        "update_frequency": "daily"
+      },
+      "reliability_score": 65,
+      "last_verified": "2025-05-01",
+      "notes_fa": "دومین اپراتور موبایل. فیلترینگ شدید همراه با یادگیری ماشین و FAVA v4. Reality با fingerprint تصادفی و ShadowTLS v3 بهترین گزینه‌اند.",
+      "notes_en": "Second largest mobile operator. Aggressive DPI with FAVA v4 and ML. Reality with randomized fingerprint and ShadowTLS v3 are top choices."
+    },
+    {
+      "id": "rightel",
+      "name_en": "Rightel",
+      "name_fa": "رایتل",
+      "asns": [
+        48434,
+        49501,
+        51074,
+        52193
+      ],
+      "ip_ranges": [
+        "5.200.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.250.0.1",
+        "secondary": "5.250.0.2",
+        "ipv6_primary": "2a02:8880::1",
+        "ipv6_secondary": "2a02:8880::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22",
+          "5.202.202.202"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "ntp.rightel.ir"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "naiveproxy",
+        "meek-azure",
+        "meek-amazon",
+        "VLESS_Reality",
+        "DefyxVPN",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Easiest to set up, good speed on Rightel"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 2,
+          "notes": "High throughput, QUIC not blocked on Rightel"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 3,
+          "notes": "SniSplit already sufficient but ShadowTLS adds extra safety"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 4,
+          "notes": "Reliable via ArvanCloud CDN fronting"
+        },
+        {
+          "protocol": "DefyxVPN",
+          "priority": 5,
+          "notes": "Good for obfuscation on Rightel"
+        },
+        {
+          "protocol": "meek-azure",
+          "priority": 6,
+          "notes": "Fallback domain fronting"
+        }
+      ],
+      "preferred_cores": [
+        "defyxvpn",
+        "hiddify",
+        "mahsang",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 95,
+      "throttle_factor": 1.5,
+      "bandwidth_mbps": {
+        "4g_download": 30,
+        "4g_upload": 15,
+        "3g_download": 5,
+        "3g_upload": 2
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 256,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "selfcare.rightel.ir",
+        "shop.rightel.ir",
+        "rightel.ir",
+        "my.rightel.ir",
+        "api.rightel.ir",
+        "pay.rightel.ir",
+        "charge.rightel.ir",
+        "support.rightel.ir",
+        "app.rightel.ir",
+        "data.rightel.ir",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud",
+          "alibaba_cloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_fragmentation_2split",
+        "description": "Simple SNI split sufficient for Rightel's FAVA v2 DPI which does not perform reassembly",
+        "split_position": 3,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 0,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          48
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "Rightel FAVA v2 does not perform active probing; standard configs work reliably"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        51820,
+        8080,
+        9050,
+        4443
+      ],
+      "dpi_behavior": {
+        "intensity": "medium",
+        "fava_version": "2.1",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": false,
+        "quic_blocking": false,
+        "ip_blocking": true,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 100,
+        "probing_interval_minutes": 60,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "tls_version_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 10,
+          "entropy_threshold": 4.5,
+          "flow_timeout_seconds": 15
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream"
+        ],
+        "bypass_difficulty": "low",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 88,
+      "last_verified": "2025-05-01",
+      "notes_fa": "سومین اپراتور موبایل. پوشش کمتر اما فیلترینگ نسبتاً سبک‌تر بر پایه FAVA v2. QUIC مسدود نیست.",
+      "notes_en": "Third mobile operator. Less coverage but lighter filtering based on FAVA v2. QUIC not blocked."
+    },
+    {
+      "id": "shatel",
+      "name_en": "Shatel",
+      "name_fa": "شاتل",
+      "asns": [
+        34918,
+        57218
+      ],
+      "ip_ranges": [
+        "62.60.0.0/16",
+        "78.38.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "62.60.128.1",
+        "secondary": "62.60.128.2",
+        "ipv6_primary": "2a01:8780::1",
+        "ipv6_secondary": "2a01:8780::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "5.202.202.202",
+          "178.22.122.100",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://electrodns.com/dns-query",
+          "provider": "electro",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "ntp.shatel.ir",
+        "5.200.200.200",
+        "178.22.122.100"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-alibaba",
+        "AmneziaWG",
+        "VLESS_Reality",
+        "VLESS_Fragment",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 1,
+          "notes": "Best for Shatel fiber; uTLS defeats flow analysis"
+        },
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 2,
+          "notes": "Solid second option on fiber"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 3,
+          "notes": "Very effective on fixed-line Shatel"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 4,
+          "notes": "RandomSplit + ShadowTLS defeats flow reconstruction"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 5,
+          "notes": "HTTP/2 looks like browser traffic"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 6,
+          "notes": "Via Alibaba CDN fronting"
+        }
+      ],
+      "preferred_cores": [
+        "amneziavpn",
+        "psiphon",
+        "hiddify",
+        "xray-gfw",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 60,
+      "throttle_factor": 1.1,
+      "bandwidth_mbps": {
+        "fiber_download": 100,
+        "fiber_upload": 50,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 100,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "my.shatel.ir",
+        "portal.shatel.ir",
+        "pay.shatel.ir",
+        "support.shatel.ir",
+        "shatel.ir",
+        "speedtest.shatel.ir",
+        "account.shatel.ir",
+        "bill.shatel.ir",
+        "shop.shatel.ir",
+        "api.shatel.ir",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "alibaba_cloud",
+          "arvancloud",
+          "tencent_cloud"
+        ],
+        "alibaba_cloud": {
+          "fronting_domain": "alicdn.com",
+          "works": true
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "RandomSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Random TLS record splitting to defeat flow-level DPI analysis used on fixed-line connections with higher bandwidth",
+        "split_position": 4,
+        "min_fragment_size": 1,
+        "max_fragment_size": 4,
+        "inter_fragment_delay_ms": 3,
+        "retry_on_failure": true,
+        "fallback_strategy": "SniSplit",
+        "jitter_ms": 5,
+        "burst_patterns": true,
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "addons.mozilla.org",
+          "www.microsoft.com"
+        ],
+        "utls_fingerprint": "firefox",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "fallback_snis": [
+          "www.apple.com",
+          "update.googleapis.com"
+        ],
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "firefox",
+        "chrome",
+        "safari",
+        "randomized"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "traffic_padding"
+        ],
+        "notes": "Shatel uses flow analysis at FAVA 3.5; traffic shaping and padding help avoid detection"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "amneziavpn": {
+          "works": true,
+          "speed": "high"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        6379,
+        8080,
+        8443,
+        9050,
+        27017
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "3.5",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 40,
+        "probing_interval_minutes": 25,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering",
+          "certificate_validation",
+          "entropy_analysis",
+          "statistical_flow_analysis"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 6,
+          "entropy_threshold": 4.0,
+          "flow_timeout_seconds": 45
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "openvpn_udp",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess",
+          "trojan_ws",
+          "hysteria2"
+        ],
+        "bypass_difficulty": "medium-high",
+        "update_frequency": "biweekly"
+      },
+      "reliability_score": 70,
+      "last_verified": "2025-05-01",
+      "notes_fa": "یکی از بزرگترین ISPهای ثابت. فیلترینگ شدید جریان روی خطوط ثابت مبتنی بر FAVA 3.5. Reality با fingerprint Firefox توصیه می‌شود.",
+      "notes_en": "One of the largest fixed-line ISPs. Heavy SNI and DNS filtering with deep flow analysis. Reality with Firefox fingerprint recommended."
+    },
+    {
+      "id": "asiatech",
+      "name_en": "Asiatech (Asre Dadeh Haye Bartar)",
+      "name_fa": "آسیاتک (عصر داده‌های برتر)",
+      "asns": [
+        56402
+      ],
+      "ip_ranges": [
+        "79.127.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "79.127.0.1",
+        "secondary": "79.127.0.2",
+        "ipv6_primary": "2a02:8980::1",
+        "ipv6_secondary": "2a02:8980::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct",
+        "HTTP_plain",
+        "SOCKS5"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-tencent",
+        "VLESS_Reality",
+        "MVLESS",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best for Asiatech fiber"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 2,
+          "notes": "Excellent throughput, QUIC not blocked"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 3,
+          "notes": "Very effective HTTP/2 masquerade"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 4,
+          "notes": "Via Tencent CDN fronting"
+        }
+      ],
+      "preferred_cores": [
+        "mahsang",
+        "hiddify",
+        "xray-gfw",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 55,
+      "throttle_factor": 1.0,
+      "bandwidth_mbps": {
+        "fiber_download": 120,
+        "fiber_upload": 60,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 0,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "asiatech.net",
+        "my.asiatech.net",
+        "portal.asiatech.net",
+        "support.asiatech.net",
+        "cdn.arvancloud.ir",
+        "api.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "tencent_cloud",
+          "alibaba_cloud",
+          "arvancloud"
+        ],
+        "tencent_cloud": {
+          "fronting_domain": "cdn-go.cn",
+          "works": true
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Standard SNI split effective for Asiatech medium-intensity filtering",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 1,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "Asiatech does not perform active probing; medium SNI filtering only"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "v2rayng": {
+          "works": true,
+          "speed": "high"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        8080,
+        8443,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "medium",
+        "fava_version": "3.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": false,
+        "quic_blocking": false,
+        "ip_blocking": false,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": false,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "tls_version_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 10,
+          "entropy_threshold": 4.5,
+          "flow_timeout_seconds": 20
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream"
+        ],
+        "bypass_difficulty": "medium",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 82,
+      "last_verified": "2025-05-01",
+      "notes_fa": "ISP فیبر نوری با سرعت بالا. فیلترینگ متوسط. QUIC و active probing غیرفعال. یکی از بهترین ISPها برای استفاده از VPN.",
+      "notes_en": "Fiber ISP with high speed. Medium filtering. QUIC and active probing disabled. One of the best ISPs for VPN usage."
+    },
+    {
+      "id": "pars_online",
+      "name_en": "ParsOnline",
+      "name_fa": "پارس آنلاین",
+      "asns": [
+        16322,
+        42337
+      ],
+      "ip_ranges": [
+        "91.92.0.0/16",
+        "91.93.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "91.108.128.1",
+        "secondary": "91.108.128.2",
+        "ipv6_primary": "2a01:9080::1",
+        "ipv6_secondary": "2a01:9080::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "91.92.154.22",
+          "91.92.155.22",
+          "5.200.200.200",
+          "178.22.122.100"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://electrodns.com/dns-query",
+          "provider": "electro",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "ntp.parsonline.net",
+        "5.200.200.200",
+        "91.92.154.22"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct",
+        "VMess_plain"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-baidu",
+        "VLESS_Reality",
+        "AmneziaWG",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 1,
+          "notes": "Best against FAVA v4.1 active probing + ML"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 2,
+          "notes": "Obfuscated WireGuard bypasses flow analysis"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 3,
+          "notes": "HTTP/2 masquerade very hard to detect"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 4,
+          "notes": "Effective combined with RecordSplit"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 5,
+          "notes": "Via Baidu CDN fronting"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "amneziavpn",
+        "psiphon",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 65,
+      "throttle_factor": 1.15,
+      "bandwidth_mbps": {
+        "fiber_download": 80,
+        "fiber_upload": 40,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 32,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "my.parsonline.net",
+        "portal.parsonline.net",
+        "pay.parsonline.net",
+        "support.parsonline.net",
+        "parsonline.net",
+        "speedtest.parsonline.net",
+        "account.parsonline.net",
+        "bill.parsonline.net",
+        "shop.parsonline.net",
+        "api.parsonline.net",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "baidu_cloud",
+          "alibaba_cloud",
+          "arvancloud"
+        ],
+        "baidu_cloud": {
+          "fronting_domain": "bcebos.com",
+          "works": true
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "RecordSplit",
+        "strategy_variant": "tls_fragmentation_3split",
+        "description": "Record-level splitting with padding to counter active probing and statistical analysis. Includes decoy traffic generation.",
+        "split_positions": [
+          3,
+          6
+        ],
+        "min_fragment_size": 1,
+        "max_fragment_size": 2,
+        "inter_fragment_delay_ms": 4,
+        "retry_on_failure": true,
+        "fallback_strategy": "RandomSplit",
+        "record_padding": true,
+        "pad_to_nearest": 16,
+        "decoy_traffic": true,
+        "decoy_interval_ms": 500,
+        "active_probing_defense": true,
+        "ttl_range": [
+          32,
+          48
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "addons.mozilla.org:443",
+        "server_names": [
+          "addons.mozilla.org",
+          "www.microsoft.com",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "randomized",
+        "short_id_length": 16,
+        "flow": "xtls-rprx-vision",
+        "note": "Use long short_id and rotate server_names to defeat FAVA v4.1 learning"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "fallback_snis": [
+          "www.apple.com",
+          "addons.mozilla.org"
+        ],
+        "handshake_timeout_ms": 6000,
+        "strict_mode": true
+      },
+      "utls_fingerprints": [
+        "randomized",
+        "firefox",
+        "chrome"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "replay_filter",
+          "time_based_challenge",
+          "ip_rotation"
+        ],
+        "recommended": "server_side_auth",
+        "rotation_interval_days": 7,
+        "notes": "ParsOnline FAVA v4.1 is most aggressive; rotate IPs weekly and use server-side auth"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "amneziavpn": {
+          "works": true,
+          "speed": "high"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "low"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1433,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        6379,
+        8080,
+        8443,
+        8888,
+        9050,
+        9051,
+        27017
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "4.1",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": true,
+        "esni_filtering": true,
+        "reset_attack": true,
+        "reset_threshold_packets": 35,
+        "probing_interval_minutes": 20,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering",
+          "certificate_validation",
+          "entropy_analysis",
+          "ml_traffic_classification",
+          "statistical_flow_analysis",
+          "active_probing",
+          "dns_query_interception",
+          "esni_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 4,
+          "entropy_threshold": 3.5,
+          "flow_timeout_seconds": 90
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "openvpn_udp",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "shadowsocks_aead",
+          "v2ray_vmess",
+          "v2ray_vless",
+          "trojan_grpc",
+          "trojan_ws",
+          "hysteria2",
+          "naiveproxy",
+          "psiphon",
+          "lantern"
+        ],
+        "bypass_difficulty": "very_high",
+        "update_frequency": "daily"
+      },
+      "reliability_score": 55,
+      "last_verified": "2025-05-01",
+      "notes_fa": "ارائه‌دهنده بزرگ با فیلترینگ تجاری گرید سازمانی. فیلترینگ شدید DNS و SNI فعال است. FAVA v4.1 با ML. چرخش IP هفتگی الزامی است.",
+      "notes_en": "Large ISP with enterprise-grade filtering. Heavy DNS poisoning, FAVA v4.1 with ML. Weekly IP rotation mandatory."
+    },
+    {
+      "id": "afranet",
+      "name_en": "Afranet",
+      "name_fa": "آفرانت",
+      "asns": [
+        25184
+      ],
+      "ip_ranges": [
+        "78.109.192.0/20"
+      ],
+      "dns_servers": {
+        "primary": "80.191.0.1",
+        "secondary": "80.191.0.2",
+        "ipv6_primary": "2a02:8280::1",
+        "ipv6_secondary": "2a02:8280::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-huawei",
+        "VLESS_Reality",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best option on Afranet data center network"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 2,
+          "notes": "QUIC not blocked on Afranet"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 3,
+          "notes": "Good for domain fronting scenarios"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 4,
+          "notes": "Via Huawei CDN domain fronting"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "xray-gfw",
+        "psiphon",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 70,
+      "throttle_factor": 1.2,
+      "bandwidth_mbps": {
+        "fiber_download": 90,
+        "fiber_upload": 45,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 0,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "afranet.com",
+        "my.afranet.com",
+        "portal.afranet.com",
+        "support.afranet.com",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud",
+          "alibaba_cloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Standard SNI split with delay for Afranet moderate filtering",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 5,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          48
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "Afranet does not perform active probing; moderate SNI filtering only"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        51820,
+        8080,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "medium",
+        "fava_version": "3.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": false,
+        "quic_blocking": false,
+        "ip_blocking": true,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 80,
+        "probing_interval_minutes": 45,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "tls_version_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 10,
+          "entropy_threshold": 4.5,
+          "flow_timeout_seconds": 20
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream"
+        ],
+        "bypass_difficulty": "low-medium",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 83,
+      "last_verified": "2025-05-01",
+      "notes_fa": "ISP دیتاسنتری بزرگ با فیلترینگ لایه‌بندی شده متوسط. مناسب برای دامین فرانتینگ. QUIC مسدود نیست.",
+      "notes_en": "Data center ISP with moderate filtering. Good for domain fronting. QUIC not blocked."
+    },
+    {
+      "id": "mobinnet",
+      "name_en": "Mobinnet",
+      "name_fa": "مبین‌نت",
+      "asns": [
+        31549
+      ],
+      "ip_ranges": [
+        "37.27.0.0/16",
+        "37.156.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.106.0.1",
+        "secondary": "37.27.0.1",
+        "ipv6_primary": "2a02:8380::1",
+        "ipv6_secondary": "2a02:8380::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "naiveproxy",
+        "meek-alibaba",
+        "VLESS_Reality",
+        "AmneziaWG",
+        "shadow-tls-v3"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Most reliable on Mobinnet TD-LTE"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 2,
+          "notes": "Obfuscated WireGuard good for TD-LTE"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 3,
+          "notes": "Via Alibaba CDN; stable on variable latency"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 4,
+          "notes": "Effective fallback"
+        }
+      ],
+      "preferred_cores": [
+        "amneziavpn",
+        "hiddify",
+        "xray",
+        "sing-box"
+      ],
+      "typical_latency_ms": 110,
+      "throttle_factor": 1.8,
+      "bandwidth_mbps": {
+        "4g_download": 25,
+        "4g_upload": 10,
+        "3g_download": 4,
+        "3g_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 512,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "mobinnet.net",
+        "my.mobinnet.net",
+        "portal.mobinnet.net",
+        "support.mobinnet.net",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "alibaba_cloud",
+          "arvancloud"
+        ],
+        "alibaba_cloud": {
+          "fronting_domain": "alicdn.com",
+          "works": true
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Standard SNI split for Mobinnet medium filtering",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 2,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "handshake_timeout_ms": 10000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "android"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "Mobinnet does not perform active probing; medium SNI filtering only"
+      },
+      "circumvention_tools": {
+        "amneziavpn": {
+          "works": true,
+          "speed": "medium"
+        },
+        "hiddify": {
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        51820,
+        8080,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "medium",
+        "fava_version": "2.5",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": false,
+        "quic_blocking": false,
+        "ip_blocking": false,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": false,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 12,
+          "entropy_threshold": 4.8,
+          "flow_timeout_seconds": 15
+        },
+        "known_signatures": [
+          "wireguard_udp",
+          "shadowsocks_stream"
+        ],
+        "bypass_difficulty": "low-medium",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 78,
+      "last_verified": "2025-05-01",
+      "notes_fa": "ارائه‌دهنده اینترنت بی‌سیم ثابت (TD-LTE). تاخیر بالاتر اما فیلترینگ منعطف‌تر. QUIC و active probing غیرفعال.",
+      "notes_en": "Wireless Fixed LTE internet provider. Higher latency but lighter filtering. QUIC and active probing disabled."
+    },
+    {
+      "id": "fanava",
+      "name_en": "Fanava Group",
+      "name_fa": "فناوا",
+      "asns": [
+        24631
+      ],
+      "ip_ranges": [
+        "5.200.128.0/17",
+        "37.156.64.0/18"
+      ],
+      "dns_servers": {
+        "primary": "5.200.128.1",
+        "secondary": "5.200.128.2",
+        "ipv6_primary": "2a01:8f80::1",
+        "ipv6_secondary": "2a01:8f80::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "meek-tencent",
+        "VLESS_Reality",
+        "MVLESS",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Most reliable on Fanava"
+        },
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 2,
+          "notes": "uTLS vision defeats access gateway DPI"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 3,
+          "notes": "HTTP/2 masquerade effective"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 4,
+          "notes": "Via Tencent CDN fronting"
+        }
+      ],
+      "preferred_cores": [
+        "mahsang",
+        "hiddify",
+        "xray-gfw",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 80,
+      "throttle_factor": 1.3,
+      "bandwidth_mbps": {
+        "fiber_download": 70,
+        "fiber_upload": 35,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 256,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "fanava.com",
+        "my.fanava.com",
+        "portal.fanava.com",
+        "support.fanava.com",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "tencent_cloud",
+          "arvancloud",
+          "alibaba_cloud"
+        ],
+        "tencent_cloud": {
+          "fronting_domain": "cdn-go.cn",
+          "works": true
+        },
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "RecordSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Record-split for Fanava access gateway DPI",
+        "split_position": 4,
+        "min_fragment_size": 1,
+        "max_fragment_size": 4,
+        "inter_fragment_delay_ms": 2,
+        "retry_on_failure": true,
+        "fallback_strategy": "SniSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "Fanava does not use active probing; heavy SNI/DNS filtering at access gateway"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "v2rayng": {
+          "works": true,
+          "speed": "high"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        51820,
+        8080,
+        8443,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "3.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": false,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 60,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 8,
+          "entropy_threshold": 4.2,
+          "flow_timeout_seconds": 30
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess"
+        ],
+        "bypass_difficulty": "medium",
+        "update_frequency": "biweekly"
+      },
+      "reliability_score": 74,
+      "last_verified": "2025-05-01",
+      "notes_fa": "گروه فناوا با فیلترینگ شدید روی گیت‌وی لایه دسترسی و DNS Poisoning فعال. QUIC مسدود است.",
+      "notes_en": "Fanava Group with heavy filtering at access gateway. Active DNS poisoning. QUIC blocked."
+    },
+    {
+      "id": "mokhaberat",
+      "name_en": "Mokhaberat (Telecommunication Company of Iran / TCI)",
+      "name_fa": "شرکت فناوری اطلاعات (دیتا) / مخابرات",
+      "asns": [
+        12880,
+        44889,
+        47262,
+        5618,
+        58224
+      ],
+      "ip_ranges": [
+        "217.218.0.0/15",
+        "217.220.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "217.218.155.155",
+        "secondary": "217.218.127.127",
+        "ipv6_primary": "2001:1af8::1",
+        "ipv6_secondary": "2001:1af8::2",
+        "system_fallback": [
+          "5.200.200.200",
+          "5.202.202.202"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        },
+        {
+          "url": "https://electrodns.com/dns-query",
+          "provider": "electro",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "ntp.tci.ir",
+        "5.200.200.200",
+        "217.218.155.155"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct",
+        "ssr",
+        "VMess_plain",
+        "VLESS_plain"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "VLESS_Reality",
+        "AmneziaWG",
+        "Psiphon",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best on TCI during normal operation"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 2,
+          "notes": "Critical: only option during national intranet mode"
+        },
+        {
+          "protocol": "Psiphon",
+          "priority": 3,
+          "notes": "Psiphon with Iran config works well on TCI"
+        },
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 4,
+          "notes": "uTLS vision defeats TCI hub filtering"
+        },
+        {
+          "protocol": "shadow-tls-v3",
+          "priority": 5,
+          "notes": "Effective combined with SNI split and national mode fallback"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 6,
+          "notes": "HTTP/2 masquerade"
+        }
+      ],
+      "preferred_cores": [
+        "psiphon",
+        "amneziavpn",
+        "hiddify",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 90,
+      "throttle_factor": 1.4,
+      "bandwidth_mbps": {
+        "adsl_download": 8,
+        "adsl_upload": 1,
+        "fiber_download": 50,
+        "fiber_upload": 25
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 200,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "portal.tci.ir",
+        "my.tci.ir",
+        "pay.tci.ir",
+        "support.tci.ir",
+        "tci.ir",
+        "adsl.tci.ir",
+        "bill.tci.ir",
+        "speedtest.tci.ir",
+        "shop.tci.ir",
+        "api.tci.ir",
+        "cdn.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud",
+          "alibaba_cloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true,
+          "note": "Works even during national intranet mode (ArvanCloud is whitelisted)"
+        },
+        "alibaba_cloud": {
+          "fronting_domain": "alicdn.com",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "SNI split with national intranet fallback. During intranet-only mode, switches to domestic CDN endpoints and Arvan peers exclusively.",
+        "split_position": 5,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 10,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          64
+        ],
+        "national_intranet_mode": {
+          "enabled": true,
+          "trigger": "international_route_withdrawal",
+          "fallback_endpoints": "arvan_cloud_only",
+          "fallback_peers": "national_intranet_yggdrasil",
+          "fallback_dns": [
+            "5.200.200.200",
+            "5.202.202.202"
+          ],
+          "circuit_duration_minutes": 10
+        }
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "addons.mozilla.org",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision",
+        "note": "During NAIN mode, reality servers must be on domestic or ArvanCloud IPs"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "fallback_snis": [
+          "www.apple.com",
+          "speedtest.net"
+        ],
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "safari",
+        "randomized"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "traffic_padding",
+          "ip_rotation"
+        ],
+        "notes": "TCI uses active probing at hub level; rotate IPs bi-weekly"
+      },
+      "circumvention_tools": {
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        },
+        "amneziavpn": {
+          "works": true,
+          "speed": "high"
+        },
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1433,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        6379,
+        8080,
+        8443,
+        8888,
+        9050,
+        9051,
+        27017
+      ],
+      "dpi_behavior": {
+        "intensity": "very_high",
+        "fava_version": "2.5",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 20,
+        "probing_interval_minutes": 15,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "tls_version_filtering",
+          "national_intranet_switching",
+          "bgp_route_manipulation",
+          "dns_hijacking"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 8,
+          "entropy_threshold": 4.3,
+          "flow_timeout_seconds": 20
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess"
+        ],
+        "bypass_difficulty": "medium",
+        "update_frequency": "monthly",
+        "national_intranet": {
+          "capable": true,
+          "trigger_conditions": [
+            "government_directive",
+            "protest_period",
+            "election_period",
+            "national_security_event"
+          ],
+          "behavior": "withdraw_international_bgp_routes",
+          "domestic_only": true,
+          "whitelisted_domains": [
+            ".ir",
+            "arvan.run",
+            "deno.dev"
+          ],
+          "whitelisted_asns": [
+            24631,
+            56402,
+            44244
+          ]
+        }
+      },
+      "reliability_score": 68,
+      "last_verified": "2025-05-01",
+      "notes_fa": "زیرساخت اصلی و ریشه اینترنت ایران. فیلترینگ در لایه هاب کشوری. قابلیت سوئیچ به شبکه ملی اطلاعات. در حالت NAIN فقط ArvanCloud و سرورهای داخلی کار می‌کنند.",
+      "notes_en": "Iran's core internet backbone. Very heavy filtering with national intranet fallbacks. During NAIN mode only ArvanCloud and domestic servers work."
+    },
+    {
+      "id": "irib",
+      "name_en": "IRIB (Islamic Republic of Iran Broadcasting)",
+      "name_fa": "صدا و سیمای جمهوری اسلامی ایران",
+      "asns": [
+        44244
+      ],
+      "ip_ranges": [
+        "5.201.0.0/16",
+        "5.202.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.200.200.1",
+        "secondary": "5.200.200.2",
+        "ipv6_primary": "2a02:8480::1",
+        "ipv6_secondary": "2a02:8480::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct",
+        "ssr"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "naiveproxy",
+        "VLESS_Reality",
+        "shadow-tls-v3"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best option on IRIB network"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 2,
+          "notes": "Via ArvanCloud CDN fronting"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 3,
+          "notes": "HTTP/2 masquerade effective"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "psiphon",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 100,
+      "throttle_factor": 1.6,
+      "bandwidth_mbps": {
+        "fiber_download": 50,
+        "fiber_upload": 25
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 256,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "irib.ir",
+        "www.irib.ir",
+        "cdn.arvancloud.ir",
+        "api.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Standard SNI split for IRIB enterprise network filtering",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 5,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox"
+      ],
+      "anti_active_probing": {
+        "enabled": false,
+        "notes": "IRIB enterprise network; heavy SNI filtering identical to TIC but no active probing"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "medium"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "low"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        51820,
+        8080,
+        8443,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "2.5",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": false,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 50,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 8,
+          "entropy_threshold": 4.3,
+          "flow_timeout_seconds": 20
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess"
+        ],
+        "bypass_difficulty": "medium",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 65,
+      "last_verified": "2025-05-01",
+      "notes_fa": "شبکه اختصاصی سازمان صدا و سیما. فیلترینگ شدید پروژه‌های زیرساختی دولتی. مشابه TIC.",
+      "notes_en": "Broadcasting enterprise network. Heavy infrastructure filtering identical to TIC. No active probing."
+    },
+    {
+      "id": "pishgaman",
+      "name_en": "Pishgaman Kavir (Pishgaman)",
+      "name_fa": "پیشگامان کویر یزد",
+      "asns": [
+        42337
+      ],
+      "ip_ranges": [
+        "185.2.12.0/22",
+        "77.238.160.0/20"
+      ],
+      "dns_servers": {
+        "primary": "5.200.200.200",
+        "secondary": "91.92.154.22",
+        "ipv6_primary": "2a02:8180::1",
+        "ipv6_secondary": "2a02:8180::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.202.202.202"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "naiveproxy",
+        "VLESS_Reality",
+        "shadow-tls-v3"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best option on Pishgaman"
+        },
+        {
+          "protocol": "hysteria2",
+          "priority": 2,
+          "notes": "Good throughput, QUIC status mixed"
+        },
+        {
+          "protocol": "vless-ws-tls",
+          "priority": 3,
+          "notes": "Via ArvanCloud CDN fronting"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "xray",
+        "sing-box"
+      ],
+      "typical_latency_ms": 75,
+      "throttle_factor": 1.25,
+      "bandwidth_mbps": {
+        "fiber_download": 50,
+        "fiber_upload": 25,
+        "adsl_download": 8,
+        "adsl_upload": 1
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 256,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "cdn.arvancloud.ir",
+        "pishgaman.net",
+        "my.pishgaman.net",
+        "portal.pishgaman.net",
+        "support.pishgaman.net"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "SniSplit",
+        "strategy_variant": "tls_fragmentation_2split",
+        "description": "SNI split with delay for Pishgaman distributed regional filtering",
+        "split_position": 4,
+        "min_fragment_size": 2,
+        "max_fragment_size": 5,
+        "inter_fragment_delay_ms": 6,
+        "retry_on_failure": true,
+        "fallback_strategy": "RecordSplit",
+        "ttl_range": [
+          32,
+          48
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.apple.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth"
+        ],
+        "notes": "Pishgaman uses active probing on detected endpoints"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "medium"
+        },
+        "psiphon": {
+          "config": "iran",
+          "works": true,
+          "speed": "medium"
+        }
+      },
+      "blocked_ports": [
+        22,
+        25,
+        1080,
+        1194,
+        1723,
+        3389,
+        4443,
+        51820,
+        8080,
+        9050
+      ],
+      "dpi_behavior": {
+        "intensity": "medium",
+        "fava_version": "2.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": false,
+        "quic_blocking": false,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": false,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 60,
+        "probing_interval_minutes": 30,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 10,
+          "entropy_threshold": 4.5,
+          "flow_timeout_seconds": 15
+        },
+        "known_signatures": [
+          "wireguard_udp",
+          "shadowsocks_stream"
+        ],
+        "bypass_difficulty": "low-medium",
+        "update_frequency": "monthly"
+      },
+      "reliability_score": 80,
+      "last_verified": "2025-05-01",
+      "notes_fa": "شبکه ثابت استانی و سراسری پیشگامان با فیلترینگ توزیع‌شده متوسط.",
+      "notes_en": "Pishgaman fixed network with standard distributed regional filtering rules."
+    },
+    {
+      "id": "itc",
+      "name_en": "ITC / DCI (Information Technology Company / Data Communication Infrastructure)",
+      "name_fa": "شرکت فناوری اطلاعات / زیرساخت داده‌های ارتباطی",
+      "asns": [
+        12880,
+        48159,
+        56402
+      ],
+      "ip_ranges": [
+        "194.225.0.0/16",
+        "195.176.0.0/16"
+      ],
+      "dns_servers": {
+        "primary": "5.202.100.100",
+        "secondary": "5.202.100.101",
+        "ipv6_primary": "2001:4860::1",
+        "ipv6_secondary": "2001:4860::2",
+        "system_fallback": [
+          "217.218.155.155",
+          "5.200.200.200",
+          "91.92.154.22"
+        ]
+      },
+      "doh_servers": [
+        {
+          "url": "https://dns.arvancloud.ir/dns-query",
+          "provider": "arvancloud",
+          "works_in_iran": true
+        }
+      ],
+      "dot_servers": [
+        {
+          "host": "dns.arvancloud.ir",
+          "port": 853,
+          "works_in_iran": true
+        }
+      ],
+      "ntp_servers": [
+        "5.200.200.200",
+        "pool.ntp.org"
+      ],
+      "blocked_protocols": [
+        "wireguard",
+        "openvpn-udp",
+        "shadowsocks-plain",
+        "trojan-direct",
+        "ssr",
+        "VMess_plain"
+      ],
+      "working_protocols": [
+        "vless-ws-tls",
+        "vmess-ws-tls",
+        "trojan-ws-tls",
+        "hysteria2",
+        "tuic-v5",
+        "naiveproxy",
+        "VLESS_Reality",
+        "AmneziaWG",
+        "shadow-tls-v3",
+        "vless-reality-vision"
+      ],
+      "preferred_protocols_ranked": [
+        {
+          "protocol": "VLESS_Reality",
+          "priority": 1,
+          "notes": "Best for ITC enterprise/government transit"
+        },
+        {
+          "protocol": "AmneziaWG",
+          "priority": 2,
+          "notes": "Obfuscated WireGuard effective"
+        },
+        {
+          "protocol": "vless-reality-vision",
+          "priority": 3,
+          "notes": "uTLS vision bypasses ITC hub DPI"
+        },
+        {
+          "protocol": "naiveproxy",
+          "priority": 4,
+          "notes": "HTTP/2 masquerade"
+        }
+      ],
+      "preferred_cores": [
+        "hiddify",
+        "amneziavpn",
+        "xray",
+        "sing-box",
+        "clash-meta"
+      ],
+      "typical_latency_ms": 80,
+      "throttle_factor": 1.3,
+      "bandwidth_mbps": {
+        "fiber_download": 100,
+        "fiber_upload": 50
+      },
+      "throttling_limits": {
+        "vpn_traffic_kbps": 256,
+        "https_traffic_kbps": 0,
+        "domestic_traffic_kbps": 0,
+        "bandwidth_cap_mb": 0
+      },
+      "sni_domains": [
+        "itc.ir",
+        "dci.ir",
+        "cdn.arvancloud.ir",
+        "api.arvancloud.ir"
+      ],
+      "cdn_fronting": {
+        "enabled": true,
+        "preferred_cdns": [
+          "arvancloud",
+          "alibaba_cloud"
+        ],
+        "arvancloud": {
+          "fronting_domain": "cdn.arvancloud.ir",
+          "works": true
+        },
+        "cloudflare": {
+          "works": false
+        }
+      },
+      "fragment_strategy": {
+        "type": "RecordSplit",
+        "strategy_variant": "tls_client_hello_split",
+        "description": "Record-level split for ITC hub-level DPI",
+        "split_position": 5,
+        "min_fragment_size": 1,
+        "max_fragment_size": 4,
+        "inter_fragment_delay_ms": 5,
+        "retry_on_failure": true,
+        "fallback_strategy": "SniSplit",
+        "ttl_range": [
+          32,
+          64
+        ]
+      },
+      "reality_configs": {
+        "recommended_dest": "www.speedtest.net:443",
+        "server_names": [
+          "www.speedtest.net",
+          "dl.google.com",
+          "addons.mozilla.org"
+        ],
+        "utls_fingerprint": "chrome",
+        "flow": "xtls-rprx-vision"
+      },
+      "shadow_tls_config": {
+        "version": 3,
+        "recommended_sni": "www.microsoft.com",
+        "handshake_timeout_ms": 8000
+      },
+      "utls_fingerprints": [
+        "chrome",
+        "firefox",
+        "randomized"
+      ],
+      "anti_active_probing": {
+        "enabled": true,
+        "strategies": [
+          "server_side_auth",
+          "ip_rotation"
+        ],
+        "notes": "ITC hub performs active probing; rotate IPs monthly"
+      },
+      "circumvention_tools": {
+        "hiddify": {
+          "works": true,
+          "speed": "high"
+        },
+        "amneziavpn": {
+          "works": true,
+          "speed": "high"
+        }
+      },
+      "blocked_ports": [
+        22,
+        23,
+        25,
+        1080,
+        1194,
+        1433,
+        1723,
+        3389,
+        4443,
+        5000,
+        5060,
+        51820,
+        6379,
+        8080,
+        8443,
+        8888,
+        9050,
+        9051,
+        27017
+      ],
+      "dpi_behavior": {
+        "intensity": "high",
+        "fava_version": "3.0",
+        "sni_filtering": true,
+        "tls_client_hello_inspection": true,
+        "dns_poisoning": true,
+        "http_filtering": true,
+        "protocol_detection": true,
+        "quic_blocking": true,
+        "ip_blocking": true,
+        "active_probing": true,
+        "tls_fingerprinting": true,
+        "ech_filtering": false,
+        "esni_filtering": false,
+        "reset_attack": true,
+        "reset_threshold_packets": 40,
+        "probing_interval_minutes": 30,
+        "chinese_cdn_works": true,
+        "cloudflare_works": false,
+        "capabilities": [
+          "sni_inspection",
+          "packet_size_fingerprinting",
+          "flow_duration_analysis",
+          "tls_version_filtering",
+          "certificate_validation",
+          "entropy_analysis"
+        ],
+        "detection_threshold": {
+          "min_packets_for_classification": 7,
+          "entropy_threshold": 4.2,
+          "flow_timeout_seconds": 30
+        },
+        "known_signatures": [
+          "openvpn_tls",
+          "wireguard_udp",
+          "shadowsocks_stream",
+          "v2ray_vmess"
+        ],
+        "bypass_difficulty": "medium-high",
+        "update_frequency": "biweekly"
+      },
+      "reliability_score": 70,
+      "last_verified": "2025-05-01",
+      "notes_fa": "شرکت فناوری اطلاعات ایران — تامین‌کننده زیرساخت ترانزیت دولتی و سازمانی. فیلترینگ در لایه هاب ملی.",
+      "notes_en": "Iran's national IT infrastructure and government transit provider. Hub-level DPI filtering."
+    }
+  ],
+  "default_profile": {
+    "description": "Fallback profile used when ISP cannot be identified",
+    "fragment_strategy": {
+      "type": "RecordSplit",
+      "split_position": "random_within_record",
+      "min_fragment_size": 1,
+      "max_fragment_size": 3,
+      "inter_fragment_delay_ms": 2,
+      "retry_on_failure": true,
+      "fallback_strategy": "SniSplit"
+    },
+    "dns_servers": [
+      "5.200.200.200",
+      "5.202.202.202",
+      "91.92.154.22"
+    ],
+    "doh_servers": [
+      {
+        "url": "https://dns.arvancloud.ir/dns-query",
+        "provider": "arvancloud",
+        "works_in_iran": true
+      }
+    ],
+    "ntp_servers": [
+      "5.200.200.200"
+    ],
+    "blocked_ports": [
+      22,
+      25,
+      1080,
+      1194,
+      1723,
+      3389,
+      51820,
+      8080,
+      9050
+    ],
+    "reality_configs": {
+      "recommended_dest": "www.speedtest.net:443",
+      "server_names": [
+        "www.speedtest.net",
+        "dl.google.com"
+      ],
+      "utls_fingerprint": "chrome",
+      "flow": "xtls-rprx-vision"
+    },
+    "shadow_tls_config": {
+      "version": 3,
+      "recommended_sni": "www.apple.com",
+      "handshake_timeout_ms": 8000
+    },
+    "dpi_fingerprint": {
+      "fava_version": "3.0",
+      "bypass_difficulty": "medium"
+    }
+  },
+  "isp_detection": {
+    "method": "asn_lookup",
+    "fallback_method": "dns_suffix",
+    "tertiary_method": "ip_range_lookup",
+    "dns_suffixes": {
+      "mci": [
+        ".mci.ir"
+      ],
+      "irancell": [
+        ".irancell.ir",
+        ".mtnirancell.ir"
+      ],
+      "rightel": [
+        ".rightel.ir"
+      ],
+      "shatel": [
+        ".shatel.ir"
+      ],
+      "pars_online": [
+        ".parsonline.net",
+        ".parsdata.com"
+      ],
+      "mokhaberat": [
+        ".tci.ir",
+        ".mokhaberat.ir"
+      ],
+      "afranet": [
+        ".afranet.com",
+        ".afranet.net"
+      ],
+      "mobinnet": [
+        ".mobinnet.net",
+        ".mobileinternet.ir"
+      ],
+      "fanava": [
+        ".fanava.com",
+        ".fanava.net"
+      ],
+      "asiatech": [
+        ".asiatech.net",
+        ".asiatech.ir"
+      ],
+      "pishgaman": [
+        ".pishgaman.net",
+        ".pishgaman.ir"
+      ],
+      "itc": [
+        ".itc.ir",
+        ".dci.ir",
+        ".tic.ir"
+      ],
+      "irib": [
+        ".irib.ir",
+        ".irib.org"
+      ]
+    },
+    "auto_update_url": "https://cdn.shield.ir/isp-profiles/v7/latest.json",
+    "ipfs_fallback_cid": "QmPlaceholderCIDForISPProfiles",
+    "update_interval_hours": 24,
+    "signature_verification": true,
+    "ip_ranges": {
+      "mci": [
+        "5.106.0.0/16",
+        "5.107.0.0/16",
+        "5.108.0.0/16"
+      ],
+      "irancell": [
+        "5.112.0.0/14",
+        "5.116.0.0/16"
+      ],
+      "rightel": [
+        "5.200.0.0/16"
+      ],
+      "shatel": [
+        "62.60.0.0/16",
+        "78.38.0.0/16"
+      ],
+      "asiatech": [
+        "79.127.0.0/16"
+      ],
+      "pars_online": [
+        "91.92.0.0/16",
+        "91.93.0.0/16"
+      ],
+      "afranet": [
+        "78.109.192.0/20"
+      ],
+      "mokhaberat": [
+        "217.218.0.0/15",
+        "217.220.0.0/16"
+      ],
+      "pishgaman": [
+        "185.2.12.0/22",
+        "77.238.160.0/20"
+      ],
+      "fanava": [
+        "5.200.128.0/17",
+        "37.156.64.0/18"
+      ],
+      "mobinnet": [
+        "37.27.0.0/16",
+        "37.156.0.0/16"
+      ],
+      "itc": [
+        "194.225.0.0/16",
+        "195.176.0.0/16"
+      ],
+      "irib": [
+        "5.201.0.0/16",
+        "5.202.0.0/16"
+      ]
+    }
+  },
+  "advanced_bypass_techniques": {
+    "description": "Global advanced techniques applicable across all Iranian ISPs",
+    "tls_tricks": {
+      "record_fragmentation": {
+        "description": "Split TLS ClientHello across multiple TCP segments",
+        "effective_against": [
+          "sni_inspection",
+          "tls_client_hello_inspection"
+        ],
+        "isps": "all"
+      },
+      "ttl_manipulation": {
+        "description": "Send initial packets with low TTL so they expire at DPI middleboxes",
+        "effective_against": [
+          "dpi_boxes_before_exit_router"
+        ],
+        "platforms": [
+          "linux",
+          "windows",
+          "openwrt"
+        ]
+      },
+      "utls_impersonation": {
+        "description": "Mimic real browser TLS fingerprints to defeat tls_fingerprinting",
+        "fingerprints": [
+          "chrome_120",
+          "firefox_120",
+          "safari_17",
+          "ios_17",
+          "android_chrome_120"
+        ],
+        "effective_against": [
+          "tls_fingerprinting",
+          "ml_traffic_classification"
+        ]
+      },
+      "ech": {
+        "description": "Encrypted Client Hello hides SNI from DPI; only works on servers with ECH support",
+        "status": "experimental",
+        "isps_that_block_ech": [
+          "irancell",
+          "pars_online"
+        ],
+        "note": "ECH filtering active on Irancell and ParsOnline as of 2025"
+      }
+    },
+    "transport_obfuscation": {
+      "shadow_tls_v3": {
+        "description": "Wraps any proxy protocol inside a real TLS handshake with a trusted SNI; v3 adds server-side auth against active probing",
+        "recommended_for": "all_isps",
+        "required_server_feature": "shadow-tls v3 server"
+      },
+      "reality": {
+        "description": "XTLS Reality: proxies TLS to a real server, server never terminates TLS; DPI sees legitimate TLS session",
+        "recommended_for": "all_isps",
+        "best_fingerprints": [
+          "xtls-rprx-vision"
+        ],
+        "note": "Rotate public keys and short_id monthly"
+      },
+      "amnezia_wg": {
+        "description": "WireGuard with junk packets, header obfuscation and init packet randomization",
+        "recommended_for": [
+          "mci",
+          "shatel",
+          "pars_online",
+          "mokhaberat"
+        ],
+        "config_tips": "Use Jc=4 Jmin=40 Jmax=70 S1=50 S2=100 H1-H4=random"
+      },
+      "naiveproxy": {
+        "description": "Uses Chromium network stack to make proxy traffic look like Chrome HTTP/2",
+        "recommended_for": [
+          "asiatech",
+          "afranet",
+          "rightel",
+          "mobinnet"
+        ],
+        "note": "Requires a Caddy server with forwardproxy plugin"
+      },
+      "hysteria2": {
+        "description": "QUIC-based with traffic shaping and MASQ mode; very fast where QUIC is not blocked",
+        "not_recommended_for": [
+          "mci",
+          "irancell",
+          "shatel",
+          "pars_online",
+          "fanava"
+        ],
+        "recommended_for": [
+          "rightel",
+          "asiatech",
+          "afranet",
+          "mobinnet"
+        ]
+      }
+    },
+    "dns_strategies": {
+      "use_doh_over_arvancloud": {
+        "description": "ArvanCloud DoH is hosted in Iran, bypasses DNS poisoning and works during NAIN mode",
+        "url": "https://dns.arvancloud.ir/dns-query",
+        "effective_during_nain": true
+      },
+      "use_dot": {
+        "description": "DNS over TLS on port 853; less likely to be intercepted than UDP 53",
+        "server": "dns.arvancloud.ir:853",
+        "effective_during_nain": true
+      },
+      "dns_over_https_bootstrap": {
+        "description": "Bootstrap DNS resolution for DoH servers using hardcoded IPs",
+        "arvancloud_ip": "185.215.232.1",
+        "electrodns_ip": "78.157.42.100"
+      }
+    },
+    "ip_rotation_strategy": {
+      "description": "Rotate VPN server IPs regularly to avoid IP blocklist accumulation",
+      "recommendations": {
+        "pars_online": "weekly",
+        "irancell": "weekly",
+        "mokhaberat": "biweekly",
+        "mci": "biweekly",
+        "shatel": "monthly",
+        "others": "monthly"
+      }
+    },
+    "national_intranet_mode_bypass": {
+      "description": "Strategies for when Iran activates full national internet isolation (NAIN)",
+      "strategies": [
+        {
+          "name": "arvancloud_domestic_fronting",
+          "description": "Route traffic through ArvanCloud CDN which is whitelisted during NAIN",
+          "works": true,
+          "protocol": "vless-ws-tls via arvancloud"
+        },
+        {
+          "name": "yggdrasil_mesh",
+          "description": "Yggdrasil overlay network using domestic peers for P2P connectivity",
+          "works": true,
+          "requires": "pre-established peers"
+        },
+        {
+          "name": "sms_bootstrap",
+          "description": "Bootstrap tunnel configuration via SMS when internet is fully cut",
+          "works": true,
+          "requires": "SMS-capable device with pre-configured keys"
+        },
+        {
+          "name": "ble_mesh",
+          "description": "Bluetooth Low Energy mesh for local area connectivity",
+          "works": true,
+          "range_meters": 100,
+          "requires": "BLE-capable devices"
+        }
+      ]
+    },
+    "quantum_safe": {
+      "description": "Post-quantum cryptography support for future-proof censorship resistance",
+      "kyber_1024_handshake": {
+        "description": "Kyber-1024 KEM combined with X25519 for hybrid key exchange",
+        "status": "experimental",
+        "supported_cores": [
+          "xray-gfw",
+          "sing-box"
+        ]
+      },
+      "lattice_onion": {
+        "description": "Multi-hop onion routing with lattice-based encryption",
+        "status": "experimental"
+      }
+    },
+    "next_gen_technologies": {
+      "description": "Languages and technologies not present in most VPN projects but highly valuable for next-gen censorship-resistant VPN",
+      "rust_io_uring": {
+        "language": "Rust",
+        "library": "io-uring crate / tokio-uring",
+        "why": "Replaces epoll with Linux io_uring ring buffers shared between userspace and kernel. In SQPOLL mode: zero syscalls for packet I/O. epoll costs 2 syscalls per packet; io_uring costs 0. At 100k pps this eliminates 200k syscalls/sec.",
+        "iran_advantage": "Higher throughput on throttled ISPs; CPU headroom for heavier obfuscation",
+        "kernel_requirement": "Linux 5.4+ (5.10+ for SQPOLL without CAP_SYS_ADMIN)",
+        "status_in_other_vpns": "Virtually none — WireGuard-go, xray, sing-box all use epoll"
+      },
+      "zig_kernel_components": {
+        "language": "Zig",
+        "why": "Cross-compiles to MIPS/ARM/x86 for OpenWrt routers without needing the OpenWrt SDK. No libc dependency, no runtime, binary size < 200KB. Safer than C (no undefined behavior), faster startup than Go.",
+        "iran_advantage": "Runs on low-end Iranian routers (TP-Link, Xiaomi) with 4MB flash",
+        "use_cases": [
+          "TUN device driver",
+          "packet processor",
+          "OpenWrt plugin"
+        ],
+        "status_in_other_vpns": "No major VPN uses Zig"
+      },
+      "ebpf_kernel_bypass": {
+        "language": "C + Rust (libbpf-rs)",
+        "why": "eBPF programs run inside the kernel at tc (traffic control) or XDP hooks. Latency: 2-5µs vs 200-400µs for nfqueue userspace. TLS fragmentation, TTL trick, and DISORDER mode execute in kernel.",
+        "iran_advantage": "Defeats FAVA at kernel speed; DPI sees fragmented packets before any userspace can reassemble them",
+        "status_in_other_vpns": "GoodbyeDPI/Zapret use nfqueue (userspace). No VPN uses eBPF for this."
+      },
+      "wasm_obfuscation": {
+        "language": "WebAssembly (Rust→WASM)",
+        "why": "Compile obfuscation logic to WASM. The binary signature changes with every recompile. Signature-based DPI cannot learn a stable pattern. Also runs in browser extensions — no app installation needed.",
+        "iran_advantage": "Iran DPI relies heavily on static signatures. WASM binary polymorphism breaks this.",
+        "status_in_other_vpns": "Experimental in Psiphon only"
+      },
+      "libp2p_p2p_discovery": {
+        "language": "Go / Rust",
+        "library": "libp2p",
+        "why": "P2P server discovery via DHT (distributed hash table). If one server IP is blocked, the client automatically finds another peer without any central authority. Kademlia DHT is used.",
+        "iran_advantage": "Iran frequently blocks server IPs. libp2p makes the server infrastructure self-healing.",
+        "status_in_other_vpns": "Lantern uses it partially; no major VPN uses it fully"
+      },
+      "pqc_hybrid_kex": {
+        "language": "Rust (pqcrypto crate)",
+        "standard": "NIST FIPS 203 (ML-KEM-768) + X25519",
+        "why": "Harvest-now-decrypt-later: intercepted traffic today can be decrypted by quantum computers in ~2030. Hybrid X25519+ML-KEM-768 requires breaking BOTH classical and quantum to recover session keys.",
+        "iran_advantage": "Iranian intelligence records VPN traffic at scale. PQC protects against future decryption.",
+        "overhead": "< 0.001% CPU overhead (400µs one-time per session)",
+        "status_in_other_vpns": "No production VPN has deployed PQC as of 2025"
+      },
+      "swift_ios_network_extension": {
+        "language": "Swift",
+        "why": "iOS requires a Network Extension (NEPacketTunnelProvider) written in Swift/ObjC. Implementing the full tunnel in Swift with native Network.framework gives better battery life, lower latency, and avoids the Go runtime overhead.",
+        "iran_advantage": "iOS is dominant in Iran. Native Swift extension = better user experience under throttling.",
+        "status_in_other_vpns": "Most use Go library bridged to Swift via CGo — suboptimal"
+      },
+      "kotlin_multiplatform": {
+        "language": "Kotlin Multiplatform (KMP)",
+        "why": "Share business logic (ISP detection, profile selection, config generation) across Android, iOS, Desktop in one Kotlin codebase. No code duplication. Type-safe.",
+        "iran_advantage": "Faster iteration on ISP profile updates across all platforms simultaneously",
+        "status_in_other_vpns": "Hiddify uses Flutter; most use separate codebases per platform"
+      },
+      "flutter_ui": {
+        "language": "Dart / Flutter",
+        "why": "Single codebase for Android, iOS, Windows, macOS, Linux, Web. Fast hot-reload for UI iteration. Strong Persian (Farsi) RTL support with proper Noto Nastaliq font rendering.",
+        "iran_advantage": "Persian UI quality is critical for Iranian users. Flutter's RTL + Noto Naskh/Nastaliq support is best in class.",
+        "status_in_other_vpns": "Hiddify uses Flutter — proven in Iran"
+      },
+      "go_core_proxy": {
+        "language": "Go",
+        "why": "Xray-core, V2Ray, sing-box are all written in Go. Excellent concurrency model (goroutines), fast compilation, strong standard library for network programming. Easiest language to contribute to existing Iranian VPN ecosystem.",
+        "iran_advantage": "Entire Iranian VPN tool ecosystem (Hiddify, V2RayNG, NekoBox) uses Go cores",
+        "status_in_other_vpns": "Dominant — Xray, sing-box, V2Ray all Go"
+      }
+    },
+    "nain_bypass_completeness": {
+      "description": "Complete NAIN (National Intranet) bypass strategy — when Iran cuts all international BGP routes",
+      "phase_1_detection": {
+        "description": "Detect NAIN activation within 30 seconds",
+        "method": "Probe 8.8.8.8:53 (international) AND 185.215.232.1:443 (ArvanCloud domestic)",
+        "logic": "if domestic_ok AND NOT international_ok => NAIN mode",
+        "implementation": "daemon/src/national_intranet/nain_detector.rs"
+      },
+      "phase_2_immediate_fallback": {
+        "description": "Switch to ArvanCloud CDN within 10 seconds of NAIN detection",
+        "mechanism": "vless-ws-tls via ArvanCloud domestic PoP",
+        "why_it_works": "ArvanCloud whitelisted by government; CDN backbone handles cross-border transit independently of BGP withdrawal",
+        "hardcoded_ips": [
+          "185.215.232.1",
+          "185.215.232.2",
+          "185.143.234.42"
+        ],
+        "implementation": "daemon/src/national_intranet/arvancloud_relay.rs"
+      },
+      "phase_3_dns_fallback": {
+        "description": "Switch to ArvanCloud DoH for DNS during NAIN",
+        "url": "https://dns.arvancloud.ir/dns-query",
+        "bootstrap_ip": "185.215.232.1",
+        "why": "System DNS poisoned during NAIN; ArvanCloud DoH is domestic and not poisoned",
+        "implementation": "daemon/src/covert/doh_over_arvancloud.rs"
+      },
+      "phase_4_mesh_fallback": {
+        "description": "If ArvanCloud also fails (worst case), activate Yggdrasil mesh",
+        "mechanism": "Yggdrasil IPv6 overlay with pre-seeded Iranian domestic peers",
+        "implementation": "daemon/src/national_intranet/wifi_aware.rs + ble_mesh.rs"
+      },
+      "phase_5_sms_bootstrap": {
+        "description": "If internet fully dark, receive new config via SMS",
+        "mechanism": "Encrypted config delivered via SMS to pre-registered number",
+        "implementation": "daemon/src/national_intranet/sms_bootstrap.rs"
+      },
+      "auto_recovery": {
+        "description": "When international internet returns, automatically switch back",
+        "detection": "Successful probe of 8.8.8.8:53",
+        "transition_time_seconds": 30
+      }
+    },
+    "iran_dpi_intelligence": {
+      "description": "Current intelligence on Iranian DPI infrastructure (as of 2025)",
+      "fava_system": {
+        "full_name": "Filtering Automated Verification Architecture",
+        "operator": "IRGC Passive Defence Organization + TIC (Telecommunication Infrastructure Company)",
+        "deployment": "Deployed at all tier-1 ISP peering points",
+        "versions": {
+          "v2.1": {
+            "isps": [
+              "rightel",
+              "pishgaman"
+            ],
+            "capabilities": [
+              "sni_inspection",
+              "basic_entropy"
+            ],
+            "bypass_difficulty": "low"
+          },
+          "v2.5": {
+            "isps": [
+              "mokhaberat",
+              "mobinnet",
+              "irib"
+            ],
+            "capabilities": [
+              "sni_inspection",
+              "entropy",
+              "reset_attack"
+            ],
+            "bypass_difficulty": "low-medium"
+          },
+          "v3.0": {
+            "isps": [
+              "fanava",
+              "afranet",
+              "asiatech",
+              "itc"
+            ],
+            "capabilities": [
+              "sni_inspection",
+              "flow_analysis",
+              "tls_fingerprint"
+            ],
+            "bypass_difficulty": "medium"
+          },
+          "v3.2": {
+            "isps": [
+              "mci"
+            ],
+            "capabilities": [
+              "sni_inspection",
+              "flow_analysis",
+              "tls_fingerprint",
+              "active_probing"
+            ],
+            "bypass_difficulty": "medium"
+          },
+          "v3.5": {
+            "isps": [
+              "shatel"
+            ],
+            "capabilities": [
+              "sni_inspection",
+              "flow_analysis",
+              "tls_fingerprint",
+              "active_probing",
+              "statistical_flow"
+            ],
+            "bypass_difficulty": "medium-high"
+          },
+          "v4.0": {
+            "isps": [
+              "irancell"
+            ],
+            "capabilities": [
+              "all_v3_plus",
+              "ml_classification",
+              "quic_inspection",
+              "esni_filtering"
+            ],
+            "bypass_difficulty": "high"
+          },
+          "v4.1": {
+            "isps": [
+              "pars_online"
+            ],
+            "capabilities": [
+              "all_v4_plus",
+              "enhanced_ml",
+              "active_probing_v2",
+              "entropy_v2"
+            ],
+            "bypass_difficulty": "very_high"
+          }
+        }
+      },
+      "poison_ips": {
+        "description": "DNS poison IPs injected by Iranian ISPs — discard any DNS response containing these",
+        "ips": {
+          "10.10.34.35": "TCI/Mokhaberat classic poison (most common)",
+          "10.10.34.36": "TCI/Mokhaberat variant",
+          "10.10.34.37": "TCI/Mokhaberat variant",
+          "185.51.200.2": "FAVA v3 MITM poison (TIC backbone)",
+          "5.160.208.63": "Irancell poison",
+          "217.218.127.127": "Mokhaberat secondary poison",
+          "127.0.0.1": "Null-route poison (some ISPs)",
+          "0.0.0.0": "Null-route poison",
+          "10.0.0.1": "Internal redirect poison (some small ISPs)"
+        }
+      },
+      "blocked_ip_ranges": {
+        "cloudflare": [
+          "104.16.0.0/12",
+          "172.64.0.0/13",
+          "198.41.128.0/17"
+        ],
+        "fastly": [
+          "151.101.0.0/16"
+        ],
+        "google_dns": [
+          "8.8.8.8/32",
+          "8.8.4.4/32"
+        ],
+        "cloudflare_dns": [
+          "1.1.1.1/32",
+          "1.0.0.1/32"
+        ],
+        "note": "These ranges are blocked at TIC backbone level — avoid as VPN server IPs"
+      },
+      "whitelisted_cdns": {
+        "arvancloud": {
+          "ranges": [
+            "185.215.232.0/24",
+            "185.143.234.0/24",
+            "188.114.96.0/20"
+          ],
+          "nain_safe": true,
+          "reason": "Iranian CDN — government whitelisted"
+        },
+        "alibaba_cloud": {
+          "note": "Chinese CDN — partial whitelist for domestic Chinese content",
+          "nain_safe": false,
+          "works_normally": true
+        },
+        "tencent_cloud": {
+          "note": "Chinese CDN — similar to Alibaba",
+          "nain_safe": false,
+          "works_normally": true
+        }
+      },
+      "active_probing_behavior": {
+        "description": "How Iranian DPI active-probes suspected VPN servers",
+        "process": [
+          "1. DPI identifies suspicious flow by ML features",
+          "2. DPI records server IP:port",
+          "3. Within 20-30 minutes, DPI sends its own TLS ClientHello to server IP",
+          "4. If server responds with generic TLS (no SNI match), IP gets blocklisted",
+          "5. If server responds with Reality/ShadowTLS (genuine destination TLS), no block"
+        ],
+        "defense": "XTLS Reality and ShadowTLS v3 both respond to active probes with genuine destination server TLS, making the server indistinguishable from the legitimate destination"
+      }
+    }
+  }
+}

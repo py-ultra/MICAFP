@@ -1,0 +1,104 @@
+name: shield
+description: MICAFP-UnifiedShield — Advanced anti-censorship VPN client. Zero features removed.
+publish_to: 'none'
+version: 10.0.0+1000
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ── State management ──────────────────────────────────────────────────────
+  flutter_bloc: ^8.1.5
+  bloc: ^8.1.4
+  equatable: ^2.0.5
+
+  # ── Existing state management (preserved — provider still used in widgets) ─
+  provider: ^6.1.2
+
+  # ── FRB zero-copy Rust↔Dart bridge (generated — do not edit output files) ─
+  flutter_rust_bridge: ^2.0.0
+
+  # ── Freezed / JSON code generation ────────────────────────────────────────
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+  # ── Service locator ───────────────────────────────────────────────────────
+  get_it: ^7.6.7
+
+  # ── Reactive extensions ───────────────────────────────────────────────────
+  rxdart: ^0.27.7
+
+  # ── Persistent storage ────────────────────────────────────────────────────
+  shared_preferences: ^2.2.3
+
+  # ── Foreground service (Android) ──────────────────────────────────────────
+  flutter_foreground_task: ^8.11.0
+
+  # ── WiFi Aware (peer-to-peer) ─────────────────────────────────────────────
+  wifi_iot: ^0.3.19
+
+  # ── Acoustic channel ──────────────────────────────────────────────────────
+  flutter_sound: ^9.16.3
+
+  # ── File system paths ─────────────────────────────────────────────────────
+  path_provider: ^2.1.4
+
+  # ── URL handling ──────────────────────────────────────────────────────────
+  url_launcher: ^6.3.1
+
+  # ── Biometric authentication ──────────────────────────────────────────────
+  local_auth: ^2.3.0
+
+  # ── Network connectivity monitoring ───────────────────────────────────────
+  connectivity_plus: ^6.0.5
+
+  # ── Battery monitoring ────────────────────────────────────────────────────
+  battery_plus: ^6.0.3
+
+  # ── Background task scheduling ────────────────────────────────────────────
+  workmanager: ^0.5.2
+
+  # ── Network information ───────────────────────────────────────────────────
+  network_info_plus: ^6.0.2
+
+  # ── Crypto for config validation ──────────────────────────────────────────
+  cryptography: ^2.7.0
+
+  # ── Vibration feedback ────────────────────────────────────────────────────
+  vibration: ^2.0.0
+
+  # ── Secure storage ────────────────────────────────────────────────────────
+  flutter_secure_storage: ^9.2.4
+
+  # ── Animations ────────────────────────────────────────────────────────────
+  flutter_animate: ^4.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  flutter_rust_bridge_codegen: ^2.0.0
+  bloc_test: ^9.1.5
+  mocktail: ^1.0.3
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/sounds/
+
+# Android configuration
+android:
+  minSdkVersion: 24
+  targetSdkVersion: 34
+
+# iOS configuration
+ios:
+  deploymentTarget: "15.0"

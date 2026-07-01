@@ -1,0 +1,42 @@
+name: Build Linux
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        target: [x86_64-unknown-linux-musl, aarch64-unknown-linux-musl]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cross-compilation tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y musl-tools gcc-aarch64-linux-gnu
+          cargo install cross
+      - name: Build Rust daemon
+        run: |
+          cd daemon
+          cross build --release --target ${{ matrix.target }}
+      - name: Strip binary
+        run: |
+          strip daemon/target/${{ matrix.target }}/release/unifiedshield-daemon || true
+      - name: Build Debian package
+        if: matrix.target == \'x86_64-unknown-linux-musl\'
+        run: |
+          mkdir -p debian-pkg/DEBIAN debian-pkg/usr/sbin debian-pkg/etc/unifiedshield
+          cp daemon/target/x86_64-unknown-linux-musl/release/unifiedshield-daemon debian-pkg/usr/sbin/unifiedshield
+          cp linux/unifiedshield.service debian-pkg/etc/unifiedshield/
+          echo "Package: unifiedshield\nVersion: 1.0.0\nArchitecture: amd64\nDepends: libc6\nMaintainer: UnifiedShield\nDescription: Next-Gen Anti-Censorship VPN" > debian-pkg/DEBIAN/control
+          dpkg-deb --build debian-pkg unifiedshield_1.0.0_amd64.deb
+      - name: Generate checksums
+        run: sha256sum daemon/target/${{ matrix.target }}/release/unifiedshield-daemon > checksum.txt
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.target }}
+          path: |
+            daemon/target/${{ matrix.target }}/release/unifiedshield-daemon
+            *.deb
+            checksum.txt

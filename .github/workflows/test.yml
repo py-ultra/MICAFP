@@ -1,0 +1,49 @@
+name: Test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  rust-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: {components: "rustfmt,clippy"}
+      - run: cd daemon && cargo fmt -- --check
+      - run: cd daemon && cargo clippy -- -D warnings
+      - run: cd daemon && cargo test
+  python-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r ai-models/train/requirements.txt
+      - run: python ai-models/quantize/validate_onnx.py
+  extension-lint:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        dir: [extensions/chrome, extensions/firefox]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: cd ${{ matrix.dir }} && npm install && npx tsc --noEmit
+  dashboard-lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: cd dashboard && npm install && npx next lint
+  censorship-simulation:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install scapy pytest
+      - run: cd tests/censorship-simulation && pytest test_bypass_effectiveness.py -v || true

@@ -1,0 +1,76 @@
+{
+  "name": "MICAFP-UnifiedShield v8 — Full Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "stable",
+      "profile": "default"
+    },
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.22"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20",
+      "nodeGypDependencies": true
+    },
+    "ghcr.io/devcontainers/features/flutter:1": {
+      "version": "stable"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "vadimcn.vscode-lldb",
+        "tamasfe.even-better-toml",
+        "golang.go",
+        "dart-code.flutter",
+        "dart-code.dart-code",
+        "ziglang.vscode-zig",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "serayuzgur.crates",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "gruntfuggly.todo-tree",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "rust-analyzer.cargo.features": "all",
+        "rust-analyzer.checkOnSave.command": "clippy",
+        "editor.formatOnSave": true,
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+  ],
+
+  "workspaceFolder": "/workspace",
+
+  "remoteEnv": {
+    "RUST_BACKTRACE": "1",
+    "RUST_LOG": "info",
+    "CARGO_TERM_COLOR": "always"
+  },
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}

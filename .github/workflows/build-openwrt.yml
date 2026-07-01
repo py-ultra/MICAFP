@@ -1,0 +1,37 @@
+name: Build OpenWrt
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        arch: [mipsel, mips, aarch64, x86_64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup OpenWrt SDK
+        run: |
+          wget -q https://downloads.openwrt.org/releases/23.05.3/targets/${{ matrix.arch }}/generic/openwrt-sdk-23.05.3-${{ matrix.arch }}-generic.Linux-x86_64.tar.xz
+          tar xf openwrt-sdk-*.tar.xz
+      - name: Cross-compile daemon
+        run: |
+          cd daemon
+          cargo build --release --target ${{ matrix.arch }}-unknown-linux-musl
+      - name: Package .ipk
+        run: |
+          mkdir -p pkg/usr/sbin pkg/etc/config pkg/etc/init.d
+          cp daemon/target/${{ matrix.arch }}-unknown-linux-musl/release/unifiedshield-daemon pkg/usr/sbin/unifiedshield
+          cp openwrt/files/etc/config/unifiedshield pkg/etc/config/
+          cp openwrt/files/etc/init.d/unifiedshield pkg/etc/init.d/
+          chmod +x pkg/etc/init.d/unifiedshield
+      - name: Generate checksums
+        run: sha256sum pkg/usr/sbin/unifiedshield > checksum.txt
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-${{ matrix.arch }}
+          path: |
+            pkg/**
+            checksum.txt

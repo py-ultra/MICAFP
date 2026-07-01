@@ -1,0 +1,94 @@
+{
+  "log": {
+    "loglevel": "info"
+  },
+  "stats": {},
+  "api": {
+    "tag": "api",
+    "services": ["StatsService"]
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserUplink": true,
+        "statsUserDownlink": true
+      }
+    },
+    "system": {
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true
+    }
+  },
+  "inbounds": [
+    {
+      "tag": "api-in",
+      "listen": "127.0.0.1",
+      "port": 10085,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "127.0.0.1"
+      }
+    },
+    {
+      "tag": "vless-xhttp-reality",
+      "listen": "0.0.0.0",
+      "port": ${PORT_XHTTP},
+      "protocol": "vless",
+      "settings": {
+        "users": [${XRAY_USERS_JSON}],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "auto"
+        },
+        "security": "reality",
+        "realitySettings": {
+          "dest": "${XHTTP_REALITY_TARGET}",
+          "serverNames": ["${XHTTP_REALITY_TARGET_HOST}"],
+          "privateKey": "${REALITY_PRIVATE_KEY}",
+          "shortIds": ["${REALITY_SHORT_ID}"]
+        }
+      }
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "inboundTag": ["api-in"],
+        "outboundTag": "api",
+        "type": "field"
+      },
+      {
+        "type": "field",
+        "ip": ["::1/128"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["::/0"],
+        "outboundTag": "block-ipv6"
+      },
+      {
+        "outboundTag": "direct",
+        "type": "field",
+        "network": "tcp,udp"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      }
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "block-ipv6"
+    }
+  ]
+}
